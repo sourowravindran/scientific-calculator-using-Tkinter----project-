@@ -1,1 +1,1 @@
-# scientific-calculator-using-Tkinter----project-
+# This project is about creating a scientific-calculator-using-Tkinter
