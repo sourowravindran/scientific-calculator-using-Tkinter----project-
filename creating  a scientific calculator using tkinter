@@ -1,0 +1,110 @@
+from tkinter import *
+import math
+
+root = Tk()
+root.title("Scientific calculator")
+root.configure(bg="black")
+
+x = Entry(root, width=30, borderwidth=30, relief=RIDGE, fg="black",
+           bg="white", font=('Arial', 12))
+x.grid(row=0, column=0, columnspan=5, padx=10, pady=10, ipady=5)
+
+def click(value):
+    current = x.get()
+    x.delete(0, END)
+    x.insert(0, current + value)
+
+def clear():
+    x.delete(0, END)
+
+def backspace():
+    current = x.get()
+    x.delete(len(current) - 1, END)
+
+def evaluate():
+    expression = x.get()
+    try:
+        result = str(eval(expression))
+        x.delete(0, END)
+        x.insert(0, result)
+    except:
+        x.delete(0, END)
+        x.insert(0, "Error")
+
+def scientific_function(event):
+    key = event.widget
+    text = key["text"]
+    current = x.get()
+
+    if text == "deg":
+        result = str(math.degrees(float(current)))
+    elif text == "sin":
+        result = str(math.sin(math.radians(float(current))))
+    elif text == "cos":
+        result = str(math.cos(math.radians(float(current))))
+    elif text == "tan":
+        result = str(math.tan(math.radians(float(current))))
+    elif text == "lg10":
+        result = str(math.log10(float(current)))
+    elif text == "log":
+        result = str(math.log(float(current)))
+    elif text == "(":
+        result = current + "*("
+    elif text == ")":
+        result = current + ")"
+    elif text == "sqrt":
+        result = str(math.sqrt(float(current)))
+    elif text == "X!":
+        result = str(math.factorial(int(current)))
+    elif text == "1/x":
+        result = str(1 / float(current))
+    elif text == "pi":
+        result = str(math.pi)
+    elif text == "e":
+        result = str(math.e)
+    else:
+        result = ""
+
+    x.delete(0, END)
+    x.insert(0, result)
+
+
+Button(root, text="C", padx=27, pady=10, relief=RAISED,
+       fg="white", bg="black", font=('Arial', 12), command=clear).grid(row=0, column=5)
+Button(root, text="bskp", padx=27, pady=10, relief=RAISED,
+       fg="white", bg="black", font=('Arial', 12), command=backspace).grid(row=0, column=6)
+
+buttons = [
+    ("7", 1, 0), ("8", 1, 1), ("9", 1, 2), ("/", 1, 3),
+    ("4", 2, 0), ("5", 2, 1), ("6", 2, 2), ("*", 2, 3),
+    ("1", 3, 0), ("2", 3, 1), ("3", 3, 2), ("-", 3, 3),
+    ("0", 4, 0), (".", 4, 1), ("=", 4, 2), ("+", 4, 3),
+]
+
+for (text, row, col) in buttons:
+    Button(root, text=text, padx=27, pady=10, relief=RAISED,
+           fg="white", bg="black", font=('Arial', 12),
+           command=lambda t=text: click(t) if t != "=" else evaluate()).grid(row=row, column=col)
+
+scientific_buttons = [
+    ("deg", 1, 4),
+    ("sin", 2, 4),
+    ("cos", 3, 4),
+    ("tan", 4, 4),
+    ("lg10", 1, 5),
+    ("log", 2, 5),
+    ("(", 3, 5),
+    (")", 4, 5),
+    (".", 4, 1),
+    ("sqrt", 1, 6),
+    ("X!", 2, 6),
+    ("1/x", 3, 6),
+    ("pi", 4, 6),
+]
+
+for (text, row, col) in scientific_buttons:
+    btn = Button(root, text=text, padx=27, pady=10, fg="white", bg="black", font=('Arial', 9))
+    btn.grid(row=row, column=col)
+    btn.bind("<Button-1>", scientific_function)
+
+root.mainloop()
